@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const jwtGenerateToken = require("../jwtToken/jwtGenerateToken")
 
 const employeeTokenRegister = async (req, res) => {
@@ -6,7 +5,7 @@ const employeeTokenRegister = async (req, res) => {
   const db = await dbConnection();
   try {
     const user = await db.collection('users').findOne({ email });
-    const token = newToken(user);
+    const token = jwtGenerateToken(user);
     return res.status(200).json({ token });
   } catch (error) {
     return res.status(500).end();
