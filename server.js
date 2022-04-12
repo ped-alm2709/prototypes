@@ -8,7 +8,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const routes = require("./app/routes/app.routes");
-const dbConfig = require("./app/config/db.config");
+// const dbConfig = require("./app/config/db.config");
 
 require('dotenv').config();
 
@@ -16,14 +16,16 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.URI, {
+  useNewUrlParser: true,         
+  useUnifiedTopology: true });
 
-mongoose.connect(
-  dbConfig,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  () => {
-    console.log('Connected to MongoDB');
-  }
-);
+  console.log('Connected to MongoDB');
+
+  mongoose.connection.on('error', (error) => {
+    throw new Error(error);
+  });
 
 app.use("/employees", routes);
 

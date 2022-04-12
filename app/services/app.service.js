@@ -12,24 +12,24 @@ const create = async (data) => {
     salary: data.salary,
     birth_date: data.birth_date,
   };
-  const user = await model.User.create({
+  const user = await model.create({
     ...newEmployee
   });
   return user;
 }
 
 const findOne = async (id) => {
-  const user = await model.User.findById({ id });
+  const user = await model.findById({ id });
   return user;
 }
 
 const findMany = async () => {
-  const users = await model.User.find({});
+  const users = await model.find({}).exec();
   return users;
 }
 
 const update = async (id, data) => {
-  const updated = await model.User.updateOne(
+  const updated = await model.updateOne(
     { id },
     { ...data },
   );
