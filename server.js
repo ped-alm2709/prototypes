@@ -8,7 +8,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const routes = require("./app/routes/app.routes");
-// const dbConfig = require("./app/config/db.config");
 
 require('dotenv').config();
 

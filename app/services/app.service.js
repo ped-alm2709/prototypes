@@ -8,6 +8,7 @@ const create = async (data) => {
   const newEmployee = {
     name: data.name,
     email: data.email,
+    password: data.password,
     department: data.department,
     salary: data.salary,
     birth_date: data.birth_date,
@@ -19,25 +20,29 @@ const create = async (data) => {
 }
 
 const findOne = async (id) => {
-  const user = await model.findById({ id });
+  const user = await model.findById({ _id: id });
   return user;
 }
 
 const findMany = async () => {
-  const users = await model.find({}).exec();
-  return users;
+  try {
+    const users = await model.find({}).exec();
+    return users;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 const update = async (id, data) => {
   const updated = await model.updateOne(
-    { id },
+    { _id: id },
     { ...data },
   );
   return updated;
 }
 
 const deleteOne = async (id) => {
-  const user = await model.User.deleteOne({ id });
+  const user = await model.deleteOne({ _id: id });
   return user;
 }
 
