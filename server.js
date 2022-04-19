@@ -26,7 +26,7 @@ mongoose.connect(process.env.URI, {
     throw new Error(error);
   });
 
-app.use("/employees", routes);
+app.use(routes);
 
 app.use((err, _req, res, _next) => {
   console.log(err.message);

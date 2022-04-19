@@ -3,14 +3,18 @@ router = express.Router();
 
 const controller = require("../controllers/app.controller.js");
 
-router.post("/", controller.create);
+router.post("/employees", controller.create);
 
-router.get("/", controller.findMany);
+router.get("/employees", controller.findMany);
 
-router.get("/:id", controller.findOne);
+router.get("/employees/:id", controller.findOne);
 
-router.put("/:id", controller.update);
+router.put("/employees/:id", controller.update);
 
-router.delete("/:id", controller.deleteEmployee);
+router.delete("/employees/:id", controller.deleteEmployee);
+
+router.get("/reports/employees/salary", controller.salaryReport);
+
+router.get("/reports/employees/age/", controller.ageReport);
 
 module.exports = router;
