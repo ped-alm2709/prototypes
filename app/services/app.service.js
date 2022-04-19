@@ -1,4 +1,11 @@
+// mongo accumulator:
+// https://stackoverflow.com/questions/54440636/the-field-name-must-be-an-accumulator-object
+
+// Date sort:
+// https://stackoverflow.com/questions/49324000/sort-data-from-mongodb-by-month-and-year
+
 const model = require("../models/app.model");
+const moment = require("moment");
 
 const create = async (data) => {
   const existsEmail = await model.findOne({ email: data.email });
@@ -26,8 +33,19 @@ const findOne = async (id) => {
 
 const findMany = async () => {
   try {
-    const users = await model.find({}).exec();
-    return users;
+    const users = await model.find({});
+    const dateMoment = await users.map((data) => {
+      const employee = {
+        _id: data.id,
+        name: data.name,
+        email: data.email,
+        department: data.department,
+        salary: data.salary,
+        birth_date: moment(data.birth_date).format('MM-DD-YYYY'),
+      };
+      return employee;
+    });
+    return dateMoment;
   } catch (err) {
     console.log(err);
   }
@@ -46,10 +64,41 @@ const deleteOne = async (id) => {
   return user;
 }
 
+const salaryReport = async () => {
+  const maxSalary = await model.find().sort({ salary: -1 }).limit(1);
+  const minSalary = await model.find().sort({ salary: 1 }).limit(1);
+  const salaryReport = {
+    lowest: minSalary[0],
+    highest: maxSalary[0],
+    avarage: (minSalary[0].salary + maxSalary[0].salary) / 2
+  }
+  return salaryReport;
+}
+
+const ageReport = async () => {
+  const users = await model.find({});
+    const dateMoment = await users.map((data) => {
+      const employee = {
+        _id: data.id,
+        name: data.name,
+        email: data.email,
+        department: data.department,
+        salary: data.salary,
+        birth_date: moment(data.birth_date).format('MM-DD-YYYY'),
+      };
+      return employee;
+    });
+    const ordered = dateMoment.sort({ birth_date: -1 });
+    console.log(ordered);
+    return ordered;
+}
+
 module.exports = {
   create,
   findOne,
   findMany,
   update,
   deleteOne,
+  salaryReport,
+  ageReport,
 }

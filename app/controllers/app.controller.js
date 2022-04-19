@@ -17,7 +17,7 @@ const findMany = async (_req, res) => {
 
 // Find a single employee with the key "id"
 const findOne = async (req, res) => {
-  const oneEmployee = await service.findOne(req.params.id)
+  const oneEmployee = await service.findOne(req.params.id);
   return res.status(200).json({ message: "Employee found successfully!", result: oneEmployee });
 }
 
@@ -33,10 +33,23 @@ const deleteEmployee = async (req, res) => {
   return res.status(200).json({ message: "Employee deleted successfully" });
 };
 
+// Return 2 employees with the lowest and highest salary, respectively
+const salaryReport = async (_req, res) => {
+  const salaryReport = await service.salaryReport();
+  return res.status(200).json({ message: "Lowest and Highest salary found", result: salaryReport });
+}
+
+const ageReport = async (_req, res) => {
+  const ageReport = await service.ageReport();
+  return res.status(200).json({ message: "Younger and Older employee found", result: ageReport });
+}
+
 module.exports = {
   create,
   findMany,
   findOne,
   update,
   deleteEmployee,
+  salaryReport,
+  ageReport,
 }
