@@ -76,21 +76,51 @@ const salaryReport = async () => {
 }
 
 const ageReport = async () => {
-  const users = await model.find({});
-    const dateMoment = await users.map((data) => {
-      const employee = {
-        _id: data.id,
-        name: data.name,
-        email: data.email,
-        department: data.department,
-        salary: data.salary,
-        birth_date: moment(data.birth_date).format('MM-DD-YYYY'),
-      };
-      return employee;
-    });
-    const ordered = dateMoment.sort({ birth_date: -1 });
-    console.log(ordered);
-    return ordered;
+  model.aggregate([
+    {
+      $match: { message: "Employees list" }
+    },
+    {
+      $project: {
+        younger: {
+          $first: {
+            $filter: {
+              input: "$result",
+              as: "r",
+              cond: { $eq: [ "$$r.birth_date", { $max: "$result.birth_date" } ] }
+            }
+          }
+        },
+        older: {
+          $first: {
+            $filter: {
+              input: "$result",
+              as: "r",
+              cond: { $eq: [ "$$r.birth_date", { $min: "$result.birth_date" } ] }
+            }
+          }
+        },
+        avg: {
+          $subtract: [
+            { $year: "$$NOW" },
+            {
+              $year: {
+                $toDate: {
+                  $avg: {
+                    $map: {
+                      input: "$result",
+                      as: "r",
+                      in: { $toLong: { $toDate: "$$r.birth_date" } }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]);
 }
 
 module.exports = {
